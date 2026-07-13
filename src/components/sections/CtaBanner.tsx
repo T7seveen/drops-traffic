@@ -21,7 +21,7 @@ export function CtaBanner() {
             textDecoration: 'none', padding: '14px 26px',
             background: '#0F172A', borderRadius: 12, transition: 'background 150ms',
           }} className="btn-dark">Начать бесплатно</Link>
-          <Link href="#tools" style={{
+          <Link href="/tools" style={{
             fontSize: 15, fontWeight: 700, color: '#0F172A',
             textDecoration: 'none', padding: '14px 26px',
             background: 'rgba(255,255,255,0.5)', borderRadius: 12,
