@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: #FFFFFF;
+  color: #0F172A;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  animation: ticker-scroll 30s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Nav hover */
+.nav-link:hover {
+  background: #F8FAFC;
+  color: #0F172A !important;
+}
+
+/* Card hover */
+.tool-card:hover {
+  transform: translateY(-2px);
+  border-color: #3B82F6 !important;
+  box-shadow: 0 8px 32px rgba(59,130,246,0.1);
+}
+
+.blog-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(15,23,42,0.08);
+}
+
+/* Button hover */
+.btn-lime:hover { background: #84CC16 !important; }
+.btn-dark:hover { background: #1E293B !important; }
+.btn-outline:hover {
+  border-color: #3B82F6 !important;
+  color: #3B82F6 !important;
+}
