@@ -7,6 +7,8 @@ export type ToolData = {
   iconColor: string
   accent: string
   tag: string
+  dashboardPath?: string
+  status: 'live' | 'soon'
   forWho: string[]
   steps: { title: string; desc: string }[]
   features: { title: string; desc: string }[]
@@ -24,6 +26,8 @@ export const tools: ToolData[] = [
     iconColor: '#3B82F6',
     accent: '#3B82F6',
     tag: 'Калькулятор · Бесплатно',
+    dashboardPath: '/dashboard/unit-calc',
+    status: 'live',
     forWho: ['Дропшипперы с несколькими поставщиками', 'Арбитражники трафика', 'Владельцы интернет-магазинов', 'Маркетологи с рекламными бюджетами'],
     steps: [
       { title: 'Введите данные', desc: 'Укажите рекламный бюджет, CPM/CPC, конверсию сайта и среднюю стоимость заказа.' },
@@ -49,6 +53,7 @@ export const tools: ToolData[] = [
     slug: 'price-spy',
     name: 'Прайс-сканер (PriceSpy)',
     tagline: 'Знай цены конкурентов раньше, чем они снизят выручку',
+    status: 'soon',
     description: 'PriceSpy автоматически мониторит цены конкурентов на Wildberries, Ozon, AliExpress и Авито. Получайте мгновенные уведомления в Telegram при изменении цен и отслеживайте позиции в поисковой выдаче маркетплейсов.',
     iconType: 'target',
     iconColor: '#65A30D',
@@ -84,6 +89,7 @@ export const tools: ToolData[] = [
     iconColor: '#2563EB',
     accent: '#2563EB',
     tag: 'ИИ-аналитика · Telegram/ВК',
+    status: 'soon',
     forWho: ['SMM-менеджеры', 'Владельцы Telegram-каналов', 'Маркетологи', 'Дропшипперы с соцсетями'],
     steps: [
       { title: 'Подключите канал', desc: 'Добавьте ваш Telegram-канал или страницу ВКонтакте через OAuth.' },
@@ -107,6 +113,7 @@ export const tools: ToolData[] = [
   },
   {
     slug: 'post-maker',
+    status: 'soon',
     name: 'Конструктор карусели (PostMaker)',
     tagline: 'Продающий пост за 30 секунд — с ИИ-текстом и готовым дизайном',
     description: 'PostMaker генерирует продающие карусели и посты для Telegram и ВКонтакте. Укажите товар или тему — ИИ напишет заголовок, описание и призыв к действию. Выберите шаблон из 80+ вариантов и опубликуйте прямо из кабинета.',
@@ -144,6 +151,8 @@ export const tools: ToolData[] = [
     iconColor: '#A3E635',
     accent: '#A3E635',
     tag: 'Реферальная программа · Флагман',
+    dashboardPath: '/dashboard/refbuilder',
+    status: 'live',
     forWho: ['Владельцы интернет-магазинов', 'SaaS-продукты', 'Инфобизнес и курсы', 'Дропшипперы с командой'],
     steps: [
       { title: 'Создайте программу', desc: 'Укажите комиссию (фиксированная или процент), холд-период и условия выплат.' },
@@ -167,6 +176,7 @@ export const tools: ToolData[] = [
   },
   {
     slug: 'utm-hub',
+    status: 'soon',
     name: 'Трекер трафика (UTM Hub)',
     tagline: 'Узнай, откуда пришёл каждый заказ — всё в одном окне',
     description: 'UTM Hub — единое место для всех UTM-меток и рекламных кампаний. Создавайте отслеживаемые ссылки, видите полный путь клиента от первого клика до покупки и принимайте решения по бюджету на основе реальных данных атрибуции.',
@@ -197,6 +207,7 @@ export const tools: ToolData[] = [
   },
   {
     slug: 'trend-finder',
+    status: 'soon',
     name: 'Поиск товаров (TrendFinder)',
     tagline: 'Найди товар-хит до того, как его найдут конкуренты',
     description: 'TrendFinder анализирует тысячи товаров на Wildberries и Ozon ежедневно и находит те, что показывают рост продаж при низкой конкуренции. Получайте готовые товарные гипотезы с оценкой маржи и списком поставщиков.',

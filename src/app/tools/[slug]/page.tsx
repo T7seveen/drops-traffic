@@ -4,6 +4,9 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { ToolIcon } from '@/components/ToolIcon'
 import { getToolBySlug, tools } from '@/lib/data/tools'
+import { getLocalSession } from '@/lib/auth/server-session'
+import { isConfigured } from '@/lib/supabase/client'
+import { getUser } from '@/lib/supabase/server'
 
 export async function generateStaticParams() {
   return tools.map(t => ({ slug: t.slug }))
@@ -20,6 +23,30 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const tool = getToolBySlug(slug)
   if (!tool) notFound()
+
+  // Check auth for CTA
+  let isLoggedIn = false
+  if (isConfigured()) {
+    const user = await getUser()
+    isLoggedIn = !!user
+  } else {
+    const session = await getLocalSession()
+    isLoggedIn = !!session
+  }
+
+  const ctaHref = isLoggedIn && tool.dashboardPath
+    ? tool.dashboardPath
+    : isLoggedIn
+      ? '/dashboard'
+      : '/auth/register'
+
+  const ctaLabel = isLoggedIn && tool.dashboardPath
+    ? 'Открыть сервис →'
+    : isLoggedIn
+      ? 'В кабинет'
+      : tool.cta
+
+  const isLive = tool.status === 'live'
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
@@ -38,18 +65,38 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
               <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B', background: '#F1F5F9', borderRadius: 20, padding: '4px 12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {tool.tag.split(' · ')[1]}
               </span>
+              {isLive ? (
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#15803D', background: '#DCFCE7', borderRadius: 20, padding: '4px 12px' }}>
+                  ● Работает
+                </span>
+              ) : (
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#92400E', background: '#FEF3C7', borderRadius: 20, padding: '4px 12px' }}>
+                  Скоро
+                </span>
+              )}
             </div>
             <h1 style={{ fontSize: 40, fontWeight: 800, color: '#0F172A', margin: '0 0 16px', letterSpacing: '-0.8px', lineHeight: 1.15 }}>
               {tool.name}
             </h1>
             <p style={{ fontSize: 18, color: '#64748B', margin: '0 0 32px', lineHeight: 1.6 }}>{tool.tagline}</p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href="/auth/register" style={{ padding: '12px 24px', borderRadius: 12, background: '#A3E635', color: '#0F172A', fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>
-                {tool.cta}
+              <Link href={ctaHref} style={{
+                padding: '12px 24px', borderRadius: 12,
+                background: isLive ? '#A3E635' : '#E2E8F0',
+                color: '#0F172A', fontWeight: 700, fontSize: 15, textDecoration: 'none',
+              }}>
+                {ctaLabel}
               </Link>
-              <Link href="/pricing" style={{ padding: '12px 24px', borderRadius: 12, border: '1.5px solid #E2E8F0', color: '#0F172A', fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
-                Тарифы
-              </Link>
+              {!isLoggedIn && (
+                <Link href="/pricing" style={{ padding: '12px 24px', borderRadius: 12, border: '1.5px solid #E2E8F0', color: '#0F172A', fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
+                  Тарифы
+                </Link>
+              )}
+              {isLoggedIn && tool.dashboardPath && (
+                <Link href="/dashboard" style={{ padding: '12px 24px', borderRadius: 12, border: '1.5px solid #E2E8F0', color: '#64748B', fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
+                  Кабинет
+                </Link>
+              )}
             </div>
           </div>
           <div style={{ background: '#F8FAFC', borderRadius: 20, padding: 40, border: '1px solid #E2E8F0' }}>
@@ -119,10 +166,14 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
       {/* CTA */}
       <section style={{ padding: '64px 32px' }}>
         <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0F172A', margin: '0 0 16px', letterSpacing: '-0.5px' }}>Готовы попробовать?</h2>
-          <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 32px' }}>Тариф Старт — бесплатно. Без банковской карты.</p>
-          <Link href="/auth/register" style={{ display: 'inline-block', padding: '14px 32px', borderRadius: 12, background: '#A3E635', color: '#0F172A', fontWeight: 700, fontSize: 16, textDecoration: 'none' }}>
-            {tool.cta}
+          <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0F172A', margin: '0 0 16px', letterSpacing: '-0.5px' }}>
+            {isLoggedIn ? 'Готово — у вас есть доступ' : 'Готовы попробовать?'}
+          </h2>
+          <p style={{ fontSize: 16, color: '#64748B', margin: '0 0 32px' }}>
+            {isLoggedIn ? 'Откройте сервис прямо сейчас из вашего кабинета.' : 'Тариф Старт — бесплатно. Без банковской карты.'}
+          </p>
+          <Link href={ctaHref} style={{ display: 'inline-block', padding: '14px 32px', borderRadius: 12, background: '#A3E635', color: '#0F172A', fontWeight: 700, fontSize: 16, textDecoration: 'none' }}>
+            {ctaLabel}
           </Link>
         </div>
       </section>
