@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { createClient, isConfigured } from '@/lib/supabase/client'
+import { getLocalSessionFromString, clearSessionCookie } from '@/lib/auth/local'
 import { useRouter } from 'next/navigation'
 
 const navLinks = [
@@ -17,7 +18,11 @@ export function Header() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!isConfigured()) return
+    if (!isConfigured()) {
+      const session = getLocalSessionFromString(document.cookie)
+      if (session) setUser({ email: session.email })
+      return
+    }
     const supabase = createClient()
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) setUser({ email: data.user.email ?? '' })
@@ -29,7 +34,13 @@ export function Header() {
   }, [])
 
   async function handleLogout() {
-    if (!isConfigured()) return
+    if (!isConfigured()) {
+      clearSessionCookie()
+      setUser(null)
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/')
+      return
+    }
     const supabase = createClient()
     await supabase.auth.signOut()
     setUser(null)

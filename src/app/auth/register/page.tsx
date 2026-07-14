@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, isConfigured } from '@/lib/supabase/client'
+import { registerLocal } from '@/lib/auth/local'
 
 export default function RegisterPage() {
   const [name, setName] = useState('')
@@ -16,11 +17,15 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
-    if (password.length < 8) { setError('Пароль должен быть не менее 8 символов'); return }
+    if (password.length < 6) { setError('Пароль должен быть не менее 6 символов'); return }
     setLoading(true)
     try {
       if (!isConfigured()) {
-        setError('Регистрация временно недоступна — сервис в режиме демонстрации.')
+        // Local auth — no Supabase needed
+        const result = registerLocal(email, password, name)
+        if (result.error) { setError(result.error); return }
+        setSuccess(true)
+        setTimeout(() => router.push('/dashboard'), 1000)
         return
       }
       const supabase = createClient()
@@ -60,7 +65,7 @@ export default function RegisterPage() {
           )}
           {success && (
             <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#15803D' }}>
-              Аккаунт создан! Проверьте почту для подтверждения. Перенаправляем...
+              Аккаунт создан! Переходим в кабинет...
             </div>
           )}
 
@@ -68,7 +73,7 @@ export default function RegisterPage() {
             {[
               { label: 'Имя', value: name, setter: setName, type: 'text', placeholder: 'Ваше имя' },
               { label: 'Email', value: email, setter: setEmail, type: 'email', placeholder: 'you@example.com' },
-              { label: 'Пароль', value: password, setter: setPassword, type: 'password', placeholder: 'Минимум 8 символов' },
+              { label: 'Пароль', value: password, setter: setPassword, type: 'password', placeholder: 'Минимум 6 символов' },
             ].map(f => (
               <div key={f.label}>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>{f.label}</label>

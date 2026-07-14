@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, isConfigured } from '@/lib/supabase/client'
+import { loginLocal } from '@/lib/auth/local'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -17,7 +18,10 @@ export default function LoginPage() {
     setLoading(true)
     try {
       if (!isConfigured()) {
-        setError('Авторизация временно недоступна — сервис в режиме демонстрации.')
+        // Local auth — no Supabase needed
+        const result = loginLocal(email, password)
+        if (result.error) { setError(result.error); return }
+        router.push('/dashboard')
         return
       }
       const supabase = createClient()

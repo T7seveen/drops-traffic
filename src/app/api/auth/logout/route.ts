@@ -3,13 +3,17 @@ import { isConfigured } from '@/lib/supabase/client'
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST() {
+  const res = NextResponse.json({ success: true })
+  // Always clear local session cookie
+  res.cookies.set('dt-local-session', '', { path: '/', maxAge: 0 })
+
   if (!isConfigured()) {
-    return NextResponse.json({ success: true })
+    return res
   }
   try {
     const supabase = await createClient()
     await supabase.auth.signOut()
-    return NextResponse.json({ success: true })
+    return res
   } catch {
     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 })
   }
