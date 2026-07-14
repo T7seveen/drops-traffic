@@ -35,7 +35,7 @@ export default function ProgramDetailPage({ params }: { params: Promise<{ id: st
   function handleInvite(e: React.FormEvent) {
     e.preventDefault()
     setInviting(true)
-    const partner = invitePartner({ name: inviteName, email: inviteEmail, program_id: id, program_slug: prog.slug })
+    const partner = invitePartner({ name: inviteName, email: inviteEmail, program_id: id, program_slug: prog!.slug })
     setInviteSuccess(`Партнёр приглашён! Ссылка: /r/${partner.code}`)
     setInviteName(''); setInviteEmail('')
     setInviting(false)

@@ -40,7 +40,7 @@ export default function LoyaltyPage() {
       {/* Program cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {programs.map(lp => {
-          const programCustomers = customers.filter(c => c.loyalty_program_id === lp.id)
+          const programCustomers = customers.filter(c => c.program_id === lp.id)
           const tierCounts = lp.tiers.reduce((acc, t) => ({ ...acc, [t.name]: programCustomers.filter(c => c.tier === t.name).length }), {} as Record<string, number>)
 
           return (
@@ -94,8 +94,8 @@ export default function LoyaltyPage() {
                   {lp.tiers.map(tier => (
                     <div key={tier.name} style={{ background: '#F8FAFC', borderRadius: 12, padding: '12px 18px', border: '1px solid #E2E8F0', minWidth: 140 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        <div style={{ fontSize: 18 }}>{tier.name === 'bronze' ? '🥉' : tier.name === 'silver' ? '🥈' : tier.name === 'gold' ? '🥇' : '💎'}</div>
-                        <TierBadge name={{ bronze: 'Бронза', silver: 'Серебро', gold: 'Золото', platinum: 'Платина' }[tier.name] || tier.name} color={tier.color} />
+                        <div style={{ fontSize: 18 }}>{{ 'Базовый': '🎫', 'Серебро': '🥈', 'Золото': '🥇', 'Платина': '💎' }[tier.name] || '🎫'}</div>
+                        <TierBadge name={tier.name} color={tier.color} />
                       </div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', marginBottom: 2 }}>{tierCounts[tier.name] || 0} клиентов</div>
                       <div style={{ fontSize: 11, color: '#94A3B8' }}>от {tier.min_spend.toLocaleString('ru')} ₽</div>

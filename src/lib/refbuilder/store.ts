@@ -107,7 +107,7 @@ export function useLoyalty() {
   const createProgram = useCallback((data: Omit<LoyaltyProgram, 'id' | 'created_at' | 'stats'>) => {
     const prog: LoyaltyProgram = {
       ...data, id: 'loy_' + uid(), created_at: new Date().toISOString(),
-      stats: { customers: 0, points_issued: 0, points_redeemed: 0, avg_balance: 0, total_cashback_paid: 0 },
+      stats: { customers: 0, points_issued: 0, points_redeemed: 0, avg_balance: 0, total_cashback_paid: 0, total_spend: 0 },
     }
     setPrograms(prev => { const next = [...prev, prog]; save('dt-loy-programs', next); return next })
     return prog

@@ -68,7 +68,7 @@ export default function PartnerPortal({ params }: { params: Promise<{ code: stri
     navigator.clipboard.writeText(refLink).then(() => { setCopiedLink(true); setTimeout(() => setCopiedLink(false), 2000) })
   }
   function copyPromo() {
-    if (partner.promo_code) navigator.clipboard.writeText(partner.promo_code).then(() => { setCopiedPromo(true); setTimeout(() => setCopiedPromo(false), 2000) })
+    if (partner?.promo_code) navigator.clipboard.writeText(partner.promo_code).then(() => { setCopiedPromo(true); setTimeout(() => setCopiedPromo(false), 2000) })
   }
 
   return (
